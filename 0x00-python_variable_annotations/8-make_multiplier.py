@@ -6,7 +6,9 @@ a float multiplier as argument
 from typing import Callable
 
 
-def make_multiplier (multiplier: [[float], float]) -> Callable[[float], float]:
+def make_multiplier(multiplier: float) -> Callable[[float], float]:
     """Add a float multiplier as argument and returns a
     function that multiplies a float"""
-    return (multiplier**multiplier))
+    def multiplier_function(x: float) -> float:
+        return x * multiplier
+    return multiplier_function

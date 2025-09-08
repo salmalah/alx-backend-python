@@ -9,7 +9,7 @@ def log_queries(func):
         # Extract the query argument (assumed to be the first positional or keyword arg named "query")
         query = kwargs.get("query") if "query" in kwargs else args[0] if args else None
         if query:
-            print(f"Executing SQL Query: {query}")
+            print(f"[{datetime.now()}] Executing SQL Query: {query}")
         return func(*args, **kwargs)
     return wrapper
 

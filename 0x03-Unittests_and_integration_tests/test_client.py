@@ -69,7 +69,7 @@ payload_dicts = [
         "repos_payload": t[1],
         "expected_repos": t[2],
         "apache2_repos": t[3]
-    }
+    }if isinstance(t, tuple) else t
     for t in TEST_PAYLOAD
 ]
 

@@ -34,7 +34,9 @@ class TestGithubOrgClient(unittest.TestCase):
                 GithubOrgClient, "org", new_callable=PropertyMock
         ) as mock_org:
             mock_org.return_value = payload
-            self.assertEqual(client._public_repos_url, "http://example.com/repos")
+            self.assertEqual(
+                    client._public_repos_url,
+                    "http://example.com/repos")
 
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
@@ -75,7 +77,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Start patcher for requests.get and configure side_effect"""
-        cls.get_patcher = patch("client.requests.get")
+        cls.get_patcher = patch("requests.get")
         cls.mock_get = cls.get_patcher.start()
 
         def side_effect(url, *args, **kwargs):
@@ -110,4 +112,3 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

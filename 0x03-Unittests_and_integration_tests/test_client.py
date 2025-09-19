@@ -10,7 +10,6 @@ from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 
 
-
 class TestGithubOrgClient(unittest.TestCase):
     """Test case for GithubOrgClient"""
 
@@ -32,12 +31,11 @@ class TestGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("test_org")
         payload = {"repos_url": "http://example.com/repos"}
         with patch.object(
-                GithubOrgClient, "org", new_callable=PropertyMock
-        ) as mock_org:
+                GithubOrgClient,
+                "org", new_callable=PropertyMock) as mock_org:
             mock_org.return_value = payload
-            self.assertEqual(
-                    client._public_repos_url,
-                    "http://example.com/repos")
+            self.assertEqual
+            (client._public_repos_url, "http://example.com/repos")
 
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
@@ -46,8 +44,8 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = test_payload
         client = GithubOrgClient("test_org")
         with patch.object(
-                GithubOrgClient, "_public_repos_url", new_callable=PropertyMock
-        ) as mock_url:
+                GithubOrgClient, "_public_repos_url",
+                new_callable=PropertyMock) as mock_url:
             mock_url.return_value = "http://example.com/repos"
             repos = client.public_repos()
             self.assertEqual(repos, ["repo1", "repo2"])
@@ -64,14 +62,19 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(client.has_license(repo, license_key), expected)
 
 
-@parameterized_class([
+# Convert TEST_PAYLOAD (tuple-based) into dicts for parameterized_class
+payload_dicts = [
     {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos,
+        "org_payload": t[0],
+        "repos_payload": t[1],
+        "expected_repos": t[2],
+        "apache2_repos": t[3]
     }
-])
+    for t in TEST_PAYLOAD
+]
+
+
+@parameterized_class(payload_dicts)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos"""
 

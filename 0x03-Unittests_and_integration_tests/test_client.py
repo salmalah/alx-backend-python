@@ -62,19 +62,8 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(client.has_license(repo, license_key), expected)
 
 
-# Convert TEST_PAYLOAD (tuple-based) into dicts for parameterized_class
-payload_dicts = [
-    {
-        "org_payload": t[0],
-        "repos_payload": t[1],
-        "expected_repos": t[2],
-        "apache2_repos": t[3]
-    }if isinstance(t, tuple) else t
-    for t in TEST_PAYLOAD
-]
-
-
-@parameterized_class(payload_dicts)
+@parameterized_class(['org_payload', 'repos_payload',
+                      'expected_repos', 'apache2_repos'], TEST_PAYLOAD)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos"""
 

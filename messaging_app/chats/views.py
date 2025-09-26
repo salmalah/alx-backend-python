@@ -192,7 +192,10 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
         # Check if user is a participant
         if request.user not in conversation.participants.all():
-            raise PermissionDenied("You are not a participant of this conversation.")
+            return Response(
+                {"detail": "You are not a participant of this conversation."},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         # Prepare message data
         data = request.data.copy()

@@ -39,3 +39,11 @@ def user_messages(request):
 
     return render(request, 'messaging/user_messages.html', {'threaded_messages': threaded_messages})
 
+@login_required
+def unread_inbox(request):
+    """
+    Display only unread messages for the logged-in user.
+    Optimized with .only() via custom manager.
+    """
+    unread_messages = Message.unread.unread_for_user(request.user)
+    return render(request, 'messaging/unread_inbox.html', {'messages': unread_messages})

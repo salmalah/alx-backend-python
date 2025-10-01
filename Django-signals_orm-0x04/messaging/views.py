@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Message
+from django.views.decorators.cache import cache_page
+from .models import Message
 
 @login_required
 def delete_user(request):
@@ -47,3 +49,12 @@ def unread_inbox(request):
     """
     unread_messages = Message.unread.unread_for_user(request.user)
     return render(request, 'messaging/unread_inbox.html', {'messages': unread_messages})
+
+@cache_page(60)
+def conversation_view(request, conversation_id):
+    """
+    Display all messages in a conversation.
+    Cached for 60 seconds to reduce DB hits.
+    """
+    messages = Message.objects.filter(conversation_id=conversation_id).select_related('sender', 'receiver').prefetch_related('replies')
+    return render(request, 'chats/conversation.html', {'messages': messages})

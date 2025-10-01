@@ -8,9 +8,26 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)  # Track if the message was edited
 
+    parent_message = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        related_name='replies',
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return f"From {self.sender} to {self.receiver} at {self.timestamp}"
-
+        
+    def get_thread(self):
+        """
+        Recursive method to fetch all replies in a threaded conversation.
+        """
+        thread = []
+        for reply in self.replies.all().select_related('sender', 'receiver').prefetch_related('replies'):
+            thread.append(reply)
+            thread.extend(reply.get_thread())
+        return thread
 
 class MessageHistory(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
